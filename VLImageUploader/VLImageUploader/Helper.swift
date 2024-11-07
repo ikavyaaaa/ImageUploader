@@ -10,39 +10,58 @@ import ZIPFoundation
 
 class FileManagerHelper {
     
-    /// Unzips a zip file and saves extracted images to a specified folder.
+    /// Unzips the selected ZIP file and saves images to `ExtractedImages` folder.
     /// - Parameters:
-    ///   - zipFilePath: URL of the zip file to unzip.
-    ///   - completion: Completion handler with the list of extracted image URLs or an error.
+    ///   - zipFilePath: URL of the selected ZIP file.
+    ///   - completion: Callback with an array of image URLs or an error.
     static func unzipAndSaveImages(zipFilePath: URL, completion: @escaping ([URL]?, Error?) -> Void) {
         let fileManager = FileManager.default
-        let destinationURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("ExtractedImages")
+        let extractedImagesDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("ExtractedImages")
         
         DispatchQueue.global(qos: .background).async {
             do {
-                // Create the destination directory if it doesn’t exist
-                if !fileManager.fileExists(atPath: destinationURL.path) {
-                    try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
+                // Ensure `ExtractedImages` directory exists
+                if !fileManager.fileExists(atPath: extractedImagesDir.path) {
+                    try fileManager.createDirectory(at: extractedImagesDir, withIntermediateDirectories: true, attributes: nil)
                 }
                 
-                // Unzip the file
-                try fileManager.unzipItem(at: zipFilePath, to: destinationURL)
+                // Unzip the file into `ExtractedImages`
+                try fileManager.unzipItem(at: zipFilePath, to: extractedImagesDir)
                 
-                // Collect extracted image URLs
-                let imageFiles = try fileManager.contentsOfDirectory(at: destinationURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-                let jpgFiles = imageFiles.filter { $0.pathExtension.lowercased() == "jpg" }
+                // Gather image files from "untitled folder" inside `ExtractedImages`
+                let imagesDir = extractedImagesDir.appendingPathComponent("A")
+                let imageFiles = try collectImages(from: imagesDir)
                 
-                // Return the list of images to the completion handler on the main thread
+                // Callback with the list of image URLs
                 DispatchQueue.main.async {
-                    completion(jpgFiles, nil)
+                    completion(imageFiles, nil)
                 }
                 
             } catch {
-                // If an error occurs, call completion with the error
                 DispatchQueue.main.async {
                     completion(nil, error)
                 }
             }
         }
+    }
+    
+    /// Helper function to collect images in a given directory.
+    private static func collectImages(from directory: URL) throws -> [URL] {
+        let fileManager = FileManager.default
+        var imageFiles: [URL] = []
+        
+        let contents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+        
+        for url in contents {
+            if url.lastPathComponent == "__MACOSX" {
+                continue  // Skip the `__MACOSX` folder
+            }
+            
+            if ["jpg", "jpeg", "png"].contains(url.pathExtension.lowercased()) {
+                imageFiles.append(url)  // Add image files to the list
+            }
+        }
+        
+        return imageFiles
     }
 }
