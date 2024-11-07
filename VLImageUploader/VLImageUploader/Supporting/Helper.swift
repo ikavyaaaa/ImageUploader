@@ -29,7 +29,7 @@ class FileManagerHelper {
                 try fileManager.unzipItem(at: zipFilePath, to: extractedImagesDir)
                 
                 // Gather image files from "untitled folder" inside `ExtractedImages`
-                let imagesDir = extractedImagesDir.appendingPathComponent("A")
+                let imagesDir = extractedImagesDir.appendingPathComponent("VLProImages")
                 let imageFiles = try collectImages(from: imagesDir)
                 
                 // Callback with the list of image URLs
