@@ -10,25 +10,36 @@ import UniformTypeIdentifiers
 
 class ViewController: UIViewController, UIDocumentPickerDelegate {
     
+    private var activityIndicator: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        // Set up the loader (activity indicator)
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .gray
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
         
         // Create and configure the button
         let openZipButton = UIButton(type: .system)
         openZipButton.setTitle("Open Zip File", for: .normal)
         openZipButton.addTarget(self, action: #selector(openZipButtonTapped), for: .touchUpInside)
         
-        // Set up button constraints or frame
         openZipButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(openZipButton)
         
         NSLayoutConstraint.activate([
             openZipButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            openZipButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            openZipButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50)
         ])
     }
-
 
     @objc func openZipButtonTapped() {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.zip])
@@ -40,6 +51,9 @@ class ViewController: UIViewController, UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let zipFileURL = urls.first else { return }
         
+        DispatchQueue.main.async {
+            self.showLoader(true)
+        }
         // Begin accessing security-scoped resource
         guard zipFileURL.startAccessingSecurityScopedResource() else {
             print("Unable to access security-scoped resource.")
@@ -63,8 +77,14 @@ class ViewController: UIViewController, UIDocumentPickerDelegate {
             FileManagerHelper.unzipAndSaveImages(zipFilePath: destinationURL) { imageURLs, error in
                 if let error = error {
                     print("Error unzipping file: \(error)")
+                    DispatchQueue.main.async {
+                        self.showLoader(false)
+                    }
                 } else if let imageURLs = imageURLs {
                     print("Unzipped Image Files:")
+                    DispatchQueue.main.async {
+                        self.showLoader(false)
+                    }
                     imageURLs.forEach { imageUrl in
                         print(imageUrl.lastPathComponent)  // Display each image file name
                     }
@@ -77,7 +97,16 @@ class ViewController: UIViewController, UIDocumentPickerDelegate {
         }
     }
 
-
+    // Show or hide the loader
+        private func showLoader(_ show: Bool) {
+            if show {
+                activityIndicator.startAnimating()
+                view.isUserInteractionEnabled = false
+            } else {
+                activityIndicator.stopAnimating()
+                view.isUserInteractionEnabled = true
+            }
+        }
 
 }
 

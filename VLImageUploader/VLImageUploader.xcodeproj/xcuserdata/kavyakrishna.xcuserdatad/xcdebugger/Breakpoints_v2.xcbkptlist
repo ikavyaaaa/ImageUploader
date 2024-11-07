@@ -39,15 +39,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CE726802-1845-4A2E-9940-1A18ADEB4846"
+            uuid = "F02C869E-157D-4854-BB2F-16D9121445D7"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VLImageUploader/MVVM/ImageUploader/Controller/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
             landmarkName = "documentPicker(_:didPickDocumentsAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -55,15 +55,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0C43ACF2-CA33-4033-8132-4387455DCD48"
+            uuid = "9FFDE621-BFF5-4735-82B7-0A5DB485E477"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VLImageUploader/MVVM/ImageUploader/Controller/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "documentPicker(_:didPickDocumentsAt:)"
             landmarkType = "7">
          </BreakpointContent>
