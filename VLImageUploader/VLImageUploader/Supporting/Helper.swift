@@ -63,61 +63,7 @@ class FileManagerHelper {
     }
 }
 
-//MARK: - This class is for the specific folder name
-
-//class FileManagerHelper {
-//    
-//    /// Unzips the provided zip file to a dynamically named folder based on the zip file name.
-//    /// - Parameters:
-//    ///   - zipFilePath: The URL of the zip file to unzip.
-//    ///   - completion: Completion handler with the list of extracted image URLs or an error.
-//    static func unzipAndSaveImages(zipFilePath: URL, completion: @escaping ([URL]?, Error?) -> Void) {
-//        let fileManager = FileManager.default
-//        
-//        // Get the base name of the zip file (without extension) to use as folder name
-//        let zipFileName = zipFilePath.deletingPathExtension().lastPathComponent
-//        let destinationURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("ExtractedImages").appendingPathComponent(zipFileName)
-//        
-//        DispatchQueue.global(qos: .background).async {
-//            do {
-//                // Create the destination directory if it doesn’t exist
-//                if !fileManager.fileExists(atPath: destinationURL.path) {
-//                    try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
-//                }
-//                
-//                // Open the zip file
-//                guard let archive = Archive(url: zipFilePath, accessMode: .read) else {
-//                    throw NSError(domain: "FileManagerHelper", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to read zip file"])
-//                }
-//                
-//                var extractedImageURLs = [URL]()
-//                
-//                // Iterate over the entries in the archive and extract files
-//                for entry in archive {
-//                    let entryDestination = destinationURL.appendingPathComponent(entry.path)
-//                    
-//                    // Check if the entry is a file and ends with .jpg
-//                    if entry.type == .file && entry.path.hasSuffix(".jpg") {
-//                        try archive.extract(entry, to: entryDestination)
-//                        extractedImageURLs.append(entryDestination)
-//                    }
-//                }
-//                
-//                DispatchQueue.main.async {
-//                    completion(extractedImageURLs, nil)
-//                }
-//                
-//            } catch {
-//                DispatchQueue.main.async {
-//                    completion(nil, error)
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-
+//MARK: - This class is for the specific folder name eg: "VLProImages"
 
 //import Foundation
 //import ZIPFoundation
